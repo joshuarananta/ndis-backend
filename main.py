@@ -1,21 +1,20 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse, FileResponse
 import fitz  # PyMuPDF for PDF processing
-import os
 
 app = FastAPI()
 
-# Default route to test if the server is up
+# Root endpoint
 @app.get("/")
-async def root():
-    return {"message": "Welcome to the FastAPI backend!"}
+async def read_root():
+    return {"message": "Welcome to the NDIS backend!"}
 
-# Favicon route to avoid 404 for favicon.ico
+# Favicon endpoint
 @app.get("/favicon.ico")
 async def favicon():
-    return FileResponse("path/to/your/favicon.ico")  # Specify your actual favicon path here
+    return FileResponse("path/to/your/favicon.ico")
 
-# Route to upload a file
+# Upload file endpoint
 @app.post("/uploadfile/")
 async def upload_file(file: UploadFile = File(...)):
     try:
@@ -34,7 +33,6 @@ async def upload_file(file: UploadFile = File(...)):
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": str(e)})
 
-# Function to extract text from a PDF
 def extract_text_from_pdf(file_path: str) -> str:
     doc = fitz.open(file_path)
     text = ""
